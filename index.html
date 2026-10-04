@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0c0b14">
+    <title>ShadowBorn RPG — Ascensão das Sombras</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./js/admin.js" defer></script>
+    <script src="./js/shop.js" defer></script>
+    <script src="./js/boss-campaign.js" defer></script>
+    <script src="./js/raid-defaults-v16.js" defer></script>
+    <script src="./js/rpg.js" defer></script>
+    <script src="./js/account.js" defer></script>
+    <script src="./js/ui-v2.js" defer></script>
+    <script src="./js/items-v10.js" defer></script>
+    <script src="./js/features-v8.js" defer></script>
+    <script src="./js/gear-data.js" defer></script>
+    <script src="./js/equipment-v12.js" defer></script>
+    <script src="./js/events-v13.js" defer></script>
+    <script src="./js/icons-v13.js" defer></script>
+    <script src="./js/patentes-data.js" defer></script>
+    <script src="./js/v14.js" defer></script>
+    <script src="./js/combat-v14.js" defer></script>
+    <script src="./js/home-v15.js" defer></script>
+    <script src="./js/raids-guardians-v16.js" defer></script>
+    <script src="./js/roulette-v17.js" defer></script>
+    <script src="./js/game.js" defer></script>
+    <script src="./js/sprites.js"></script>
+    <script src="./js/controls.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div id="game-wrapper">
+            <aside id="v13-event-banner" hidden aria-live="polite"></aside>
+            <canvas></canvas>
+
+            <!-- HUD dentro da partida -->
+            <div id="hud" class="hidden">
+                <div class="hud-top">
+                    <div id="hp-bar-wrap">
+                        <span class="hud-icon">❤</span>
+                        <div id="hp-bar-bg"><div id="hp-bar-fill"></div></div>
+                    </div>
+                    <div class="hud-pills">
+                        <div class="hud-pill" id="coin-counter"><span class="hud-icon">🪙</span><span id="coin-count" class="wallet-coins">0</span></div>
+                        <div class="hud-pill" id="kill-counter"><span class="hud-icon">💀</span><span id="kill-count">0</span></div>
+                    </div>
+                </div>
+                <div class="v12-energy"><span id="v12-energy-text">Ultimate · 0%</span><progress id="v12-energy" max="100" value="0"></progress></div><div class="v9-hud-actions"><button id="v9-game-fullscreen" aria-label="Tela cheia">⛶</button><button id="hud-pause-btn" aria-label="Pausar">⏸</button></div>
+            </div>
+
+            <div id="loading-screen" class="screen hidden v9-loading"><div class="v9-loader-mark">◈</div><h2>SHADOWBORN</h2><p id="v9-loading-text">Preparando as sombras...</p><div class="v9-loadbar"><i id="v9-loadfill"></i></div><small id="v9-loadpct">0%</small></div>
+            <!-- ===== HUB PRINCIPAL V2 ===== -->
+            <div id="title-screen" class="screen shadow-ui-v2">
+                <div class="v2-bg"><div class="v2-moon"></div><div class="v2-castle"></div></div>
+                <header class="v2-topbar">
+                    <div class="v2-brand"><span class="v2-brand-mark">◈</span><div><b>SHADOWBORN</b><small>RPG · ASCENSÃO DAS SOMBRAS</small></div></div>
+                    <div class="v2-wallet"><span>🪙 <b id="title-coin-count" class="wallet-coins">0</b></span><span title="Diamante VIP">💎 <b id="v9-diamonds">0</b></span><button id="account-btn-menu" class="v2-icon-btn" title="Conta">👤</button><button id="v2-fullscreen-btn" class="v2-icon-btn v2-fullscreen" title="Tela cheia" aria-label="Tela cheia">⛶</button><button class="v2-icon-btn" title="Configurações" onclick="document.getElementById('how-to-btn').click()">⚙</button></div>
+                </header>
+                <nav id="title-buttons" class="v2-nav hidden">
+                    <button class="active" data-v2tab="inicio">⌂ <span>INÍCIO</span></button>
+                    <button id="character-btn-menu">♙ <span>PERSONAGEM</span></button>
+                    <button id="inventory-btn-menu">▣ <span>INVENTÁRIO</span></button>
+                    <button id="skills-btn-menu">✦ <span>HABILIDADES</span></button>
+                    <button id="quests-btn-menu">☷ <span>MISSÕES</span></button>
+                    <button id="phases-btn-menu">◇ <span>MAPA</span></button>
+                    <button id="npcs-btn-menu">♟ <span>NPCS</span></button>
+                    <button id="bosses-btn-menu">♛ <span>BOSSES</span></button>
+                    <button id="shop-btn-menu">🛒 <span>LOJA</span></button>
+                    <button id="ranking-btn-menu">🏆 <span>RANKING</span></button>
+                    <button id="system-btn-menu">⚙ <span>SISTEMA</span></button>
+                </nav>
+                <main class="v2-home">
+                    <section class="v2-hero">
+                        <div class="v2-hero-copy"><span class="v2-kicker">CAÇADOR DAS SOMBRAS</span><h1>ASCENDA<br><em>ALÉM DA ESCURIDÃO</em></h1><p>Explore terras amaldiçoadas, evolua seu caçador e enfrente criaturas que nasceram do vazio.</p><button id="start-btn" class="v2-play">▶ CONTINUAR JORNADA</button><button id="how-to-btn" class="v2-secondary">COMO JOGAR</button></div>
+                        <div class="v2-warrior" id="v15-feature"><div class="v2-aura" id="v15-feature-aura"></div><img id="v15-feature-image" src="./assets/bosses/10-umbrael.png" alt="Boss em destaque"><div class="v15-feature-caption"><small id="v15-feature-label">BOSS EM DESTAQUE</small><strong id="v15-feature-title"></strong><p id="v15-feature-description"></p></div></div>
+                    </section>
+                    <aside class="v2-profile-card">
+                        <div class="v2-profile-head"><div class="v2-avatar"><img id="v14-home-rank-icon" class="v14-rank-icon" src="./assets/patentes/png/patente_001.png" alt="Patente"></div><div><small>PORTADOR</small><h2 id="v2-player-name">Rafael</h2><p id="v14-home-rank-name">Recruta das Sombras I</p></div><div class="v2-level"><small>NÍVEL</small><b id="v2-level">1</b></div></div>
+                        <div class="v2-bars"><label>HP <i><span class="hp"></span></i><b>100 / 100</b></label><label>MP <i><span class="mp"></span></i><b>100 / 100</b></label><label>EXP <i><span id="v2-exp" class="xp"></span></i><b id="v2-exp-text">0 / 100</b></label></div>
+                        <div id="v14-next-rank" class="v14-next-rank"></div><div class="v2-stats"><div><span>⚔</span><small>PODER</small><b id="v2-power">0</b></div><div><span>✥</span><small>AGILIDADE</small><b id="v2-agility">0</b></div><div><span>♥</span><small>VIGOR</small><b id="v2-vigor">0</b></div></div>
+                        <div class="v2-quick"><button onclick="document.getElementById('character-btn-menu').click()">PERSONAGEM</button><button onclick="document.getElementById('shop-btn-menu').click()">EQUIPAMENTOS</button></div>
+                    </aside>
+                </main>
+                <section class="v2-bottom-cards"><button onclick="document.getElementById('phases-btn-menu').click()"><span>◈</span><div><b>MAPA DO MUNDO</b><small>Escolha seu próximo destino</small></div></button><button onclick="document.getElementById('quests-btn-menu').click()"><span>☷</span><div><b>MISSÕES</b><small>Contratos e recompensas</small></div></button><button data-v2tab="bosses"><span>♛</span><div><b>BOSSES</b><small>Desafios das sombras</small></div></button></section>
+                <p id="loading-text" class="loading-text v2-loading">Carregando o mundo...</p>
+                <button id="admin-btn-menu" class="v2-admin admin-entry-btn hidden">🛠 ADMIN</button>
+                <div class="title-wallet" id="title-wallet" style="display:none"><span class="wallet-coins">0</span></div>
+            </div>
+
+            <!-- ===== COMO JOGAR ===== -->
+            <div id="howto-screen" class="screen hidden">
+                <div class="panel">
+                    <h2>Como Jogar</h2>
+                    <div class="howto-grid">
+                        <div class="howto-row"><span class="key">A / D</span><span>Mover</span></div>
+                        <div class="howto-row"><span class="key">W</span><span>Pular</span></div>
+                        <div class="howto-row"><span class="key">Espaço</span><span>Atacar (corte de katana)</span></div>
+                        <div class="howto-row"><span class="key">Esc</span><span>Pausar</span></div>
+                    </div>
+                    <p class="howto-note">No celular, use os botões que aparecem na tela. Derrote inimigos para ganhar moedas e gastar na Loja!</p>
+                    <button id="howto-back-btn" class="btn btn-secondary">Voltar</button>
+                </div>
+            </div>
+
+            <!-- ===== LOJA ===== -->
+            <div id="shop-screen" class="screen hidden">
+                <div class="panel panel-shop">
+                    <div class="shop-header">
+                        <h2>🏪 Loja</h2>
+                        <div class="shop-wallet"><span class="hud-icon">🪙</span> <span id="shop-coin-count" class="wallet-coins">0</span></div>
+                    </div>
+                    <div id="v12-shop-wallet" class="v12-wallet"></div><section id="v17-roulette"></section><div id="v12-shop-tabs" class="v12-tabs"></div><p id="v12-shop-status" role="status"></p><div id="v12-shop-grid" class="v12-grid"></div><h3>Treinamento de atributos</h3><div id="shop-list" class="shop-list"></div>
+                    <button id="shop-back-btn" class="btn btn-secondary">Voltar</button>
+                </div>
+            </div>
+
+            <!-- ===== PERSONAGEM / PROGRESSÃO ===== -->
+            <div id="character-screen" class="screen hidden">
+                <div class="panel panel-rpg">
+                    <div class="rpg-heading"><div><span class="rpg-kicker">PORTADOR DA SOMBRA</span><h2>Personagem</h2></div><div id="v14-profile-rank" class="v14-profile-rank"></div><div class="level-sigil"><small>NÍVEL</small><b id="rpg-level">1</b></div></div>
+                    <div class="xp-track"><div id="rpg-xp-fill"></div></div><p id="rpg-xp-text" class="muted">0 / 100 XP</p>
+                    <div id="rpg-stats" class="rpg-stat-grid"></div>
+                    <div class="rpg-points"><span>Pontos de atributo</span><strong id="rpg-points">0</strong></div>
+                    <button id="character-back-btn" class="btn btn-secondary">Voltar</button>
+                </div>
+            </div>
+
+            <!-- ===== MISSÕES ===== -->
+            <div id="quests-screen" class="screen hidden">
+                <div class="panel panel-rpg">
+                    <div class="rpg-heading"><div><span class="rpg-kicker">CONTRATOS DA NOITE</span><h2>Missões</h2></div></div>
+                    <div id="quest-list" class="quest-list"></div>
+                    <button id="quests-back-btn" class="btn btn-secondary">Voltar</button>
+                </div>
+            </div>
+
+            <div id="inventory-screen" class="screen hidden"><div class="panel panel-rpg v9-inventory-panel"><div class="rpg-heading"><div><span class="rpg-kicker">MOCHILA DO CAÇADOR</span><h2>🎒 Inventário</h2></div></div><div class="v9-inv-head"><span>Itens obtidos derrotando NPCs e Bosses.</span><b id="v9-inv-count">0 itens</b></div><div id="v12-equipment-slots" class="v12-slots"></div><div id="v12-inventory-tabs" class="v12-tabs"></div><div id="v12-equipment-grid" class="v12-grid"></div><h3>Materiais e drops</h3><h3>Guardiões das Sombras</h3><div id="v16-guardians" class="v12-grid"></div><div id="v9-inventory" class="v9-inventory"></div><button id="inventory-back-btn" class="btn btn-secondary">Voltar</button></div></div>
+            <!-- ===== V8 TELAS INTEGRADAS AO FLUXO ORIGINAL ===== -->
+            <div id="skills-screen" class="screen hidden"><div class="panel panel-rpg v8-panel"><div class="rpg-heading"><div><span class="rpg-kicker">PODER DA SOMBRA</span><h2>Habilidades</h2></div></div><div id="v8-skills" class="v8-grid"></div><button class="btn btn-secondary v8-back">Voltar</button></div></div>
+            <div id="npcs-screen" class="screen hidden"><div class="panel panel-rpg v8-panel"><div class="rpg-heading"><div><span class="rpg-kicker">ARQUIVO DAS SOMBRAS</span><h2>NPCs</h2></div></div><div id="v8-npcs" class="v8-grid"></div><button class="btn btn-secondary v8-back">Voltar</button></div></div>
+            <div id="bosses-screen" class="screen hidden"><div class="panel panel-rpg v8-panel"><div class="rpg-heading"><div><span class="rpg-kicker">AMEAÇAS SUPREMAS</span><h2>Bosses</h2></div></div><div id="v8-bosses" class="v8-grid"></div><button class="btn btn-secondary v8-back">Voltar</button></div></div>
+            <div id="ranking-screen" class="screen hidden"><div class="panel panel-rpg v8-panel"><div class="rpg-heading"><div><span class="rpg-kicker">HALL DOS CAÇADORES</span><h2>🏆 Ranking Global</h2></div></div><div class="v8-rank-tabs"><button data-v8rank="level">🏆 Nível</button><button data-v8rank="coins">🪙 Moedas</button><button data-v8rank="diamonds">💎 Diamantes</button></div><button class="btn" id="v13-rank-refresh">Atualizar ranking</button><div id="v8-ranking" class="v8-ranking"><p>Carregando...</p></div><button class="btn btn-secondary v8-back">Voltar</button></div></div>
+            <div id="system-screen" class="screen hidden"><div class="panel panel-rpg v8-panel"><div class="rpg-heading"><div><span class="rpg-kicker">SHADOWBORN</span><h2>Sistema</h2></div></div><div class="v8-system"><button id="v8-fullscreen" class="btn btn-primary">⛶ Tela cheia</button><button id="v8-reload" class="btn btn-secondary">↻ Recarregar interface</button></div><button class="btn btn-secondary v8-back">Voltar</button></div></div>
+
+            <!-- ===== PAUSA ===== -->
+            <div id="pause-screen" class="screen hidden">
+                <div class="panel">
+                    <h2>Pausado</h2>
+                    <button id="resume-btn" class="btn btn-primary">Continuar</button>
+                    <button id="restart-btn" class="btn btn-secondary">Reiniciar</button>
+                    <button id="shop-btn-pause" class="btn btn-secondary">🏪 Loja</button>
+                    <button id="menu-btn" class="btn btn-ghost">Menu Principal</button>
+                </div>
+            </div>
+
+            <!-- ===== GAME OVER ===== -->
+            <div id="gameover-screen" class="screen hidden">
+                <div class="panel">
+                    <h2 class="gameover-title">Você morreu</h2>
+                    <p id="gameover-stats"></p>
+                    <button id="retry-btn" class="btn btn-primary">Tentar Novamente</button>
+                    <button id="shop-btn-gameover" class="btn btn-secondary">🏪 Loja</button>
+                    <button id="gameover-menu-btn" class="btn btn-ghost">Menu Principal</button>
+                </div>
+            </div>
+
+            <!-- ===== LOGIN ===== -->
+            <div id="login-screen" class="screen hidden">
+                <div class="panel">
+                    <h2>Entrar</h2>
+                    <input id="login-email" class="admin-input" type="email" placeholder="Email" autocomplete="username" />
+                    <input id="login-password" class="admin-input" type="password" placeholder="Senha" autocomplete="current-password" />
+                    <p id="login-error" class="form-error"></p>
+                    <button id="login-submit-btn" class="btn btn-primary">Entrar</button>
+                    <button id="go-to-register-btn" class="btn btn-ghost">Não tenho conta — Cadastrar</button>
+                    <button id="login-back-btn" class="btn btn-ghost">Voltar</button>
+                </div>
+            </div>
+
+            <!-- ===== CADASTRO ===== -->
+            <div id="register-screen" class="screen hidden">
+                <div class="panel">
+                    <h2>Criar Conta</h2>
+                    <input id="register-name" class="admin-input" type="text" placeholder="Seu nome" autocomplete="name" />
+                    <input id="register-email" class="admin-input" type="email" placeholder="Email" autocomplete="username" />
+                    <input id="register-password" class="admin-input" type="password" placeholder="Senha (mín. 4 caracteres)" autocomplete="new-password" />
+                    <p id="register-error" class="form-error"></p>
+                    <button id="register-submit-btn" class="btn btn-primary">Criar Conta</button>
+                    <button id="go-to-login-btn" class="btn btn-ghost">Já tenho conta — Entrar</button>
+                    <button id="register-back-btn" class="btn btn-ghost">Voltar</button>
+                </div>
+            </div>
+
+            <!-- ===== PERFIL ===== -->
+            <div id="profile-screen" class="screen hidden">
+                <div class="panel">
+                    <div id="profile-content"></div>
+                    <button id="profile-back-btn" class="btn btn-secondary">Voltar</button>
+                    <button id="logout-btn" class="btn btn-ghost">Sair da conta</button>
+                </div>
+            </div>
+
+            <!-- ===== SELEÇÃO DE FASE ===== -->
+            <div id="phase-select-screen" class="screen hidden">
+                <div class="panel panel-shop">
+                    <h2>🗺️ Escolha a Fase</h2>
+                    <div id="phase-select-list" class="shop-list"></div>
+                    <button id="phase-select-back-btn" class="btn btn-secondary">Voltar</button>
+                </div>
+            </div>
+
+            <!-- ===== FASE CONCLUÍDA ===== -->
+            <div id="phasecomplete-screen" class="screen hidden">
+                <div class="panel">
+                    <h2 class="phasecomplete-title">🏆 Fase Concluída!</h2>
+                    <p id="phasecomplete-stats"></p>
+                    <button id="next-phase-btn" class="btn btn-primary hidden">▶ Próxima Fase</button>
+                    <button id="phasecomplete-phases-btn" class="btn btn-secondary">🗺️ Fases</button>
+                    <button id="phasecomplete-menu-btn" class="btn btn-ghost">Menu Principal</button>
+                </div>
+            </div>
+
+            <!-- ===== PAINEL DE ADMIN ===== -->
+            <div id="admin-screen" class="screen hidden">
+                <div class="panel panel-admin">
+                    <h2>🛠️ Painel de Admin</h2>
+
+                    <div class="admin-tabs">
+                        <button id="admin-tab-phases" class="admin-tab active">🗺️ Fases</button>
+                        <button id="admin-tab-npcs" class="admin-tab">👹 NPCs</button>
+                        <button id="admin-tab-items" class="admin-tab">🎒 Itens</button>
+                        <button id="admin-tab-raids" class="admin-tab">Raids / Guardiões</button><button id="admin-tab-home" class="admin-tab">Página inicial</button><button id="admin-tab-events" class="admin-tab">Eventos</button><button id="admin-tab-catalog" class="admin-tab">Loja / Equipamentos</button><button id="admin-tab-users" class="admin-tab">👤 Usuários</button>
+                    </div>
+
+                    <!-- ---- ABA FASES ---- -->
+                    <div id="admin-phases-tab" class="admin-tab-content">
+                        <div id="admin-phase-list" class="admin-list"></div>
+
+                        <h3>Nova Fase</h3>
+                        <input id="admin-phase-name" class="admin-input" placeholder="Nome da fase" />
+
+                        <div class="admin-row">
+                            <label><input type="radio" name="bgType" value="image" checked> Imagem de fundo</label>
+                            <label><input type="radio" name="bgType" value="gradient"> Cor / Gradiente</label>
+                        </div>
+
+                        <input id="admin-phase-bg-url" class="admin-input" type="url" placeholder="URL da imagem de fundo (ex: https://i.imgur.com/exemplo.png)" />
+                        <div id="admin-phase-gradient-controls" class="admin-row hidden">
+                            <label>Céu <input id="admin-phase-color-top" type="color" value="#4a3b63" /></label>
+                            <label>Chão <input id="admin-phase-color-bottom" type="color" value="#1a1424" /></label>
+                        </div>
+
+                        <label class="admin-input-label">Tamanho do mapa (telas)
+                            <input id="admin-phase-width" class="admin-input" type="number" min="2" max="12" value="6" />
+                        </label>
+
+                        <h4>Inimigos na fase</h4>
+                        <div id="admin-phase-spawns"></div>
+                        <div class="admin-row">
+                            <select id="admin-spawn-type" class="admin-input"></select>
+                            <button id="admin-add-spawn" class="btn btn-secondary">+ Adicionar</button>
+                        </div>
+
+                        <label class="admin-input-label admin-row">
+                            <input type="checkbox" id="admin-phase-has-boss" /> Tem chefão no final da fase
+                        </label>
+                        <select id="admin-phase-boss-type" class="admin-input hidden"></select>
+
+                        <button id="admin-save-phase" class="btn btn-primary">💾 Salvar Fase</button>
+                    </div>
+
+                    <div id="admin-home-tab" class="admin-tab-content hidden"><h3>Destaque da página inicial</h3><div id="v15-home-form"></div><p id="v15-home-status" role="status"></p></div>
+                    <div id="admin-events-tab" class="admin-tab-content hidden"><h3>Eventos do servidor</h3><div id="v13-event-form"></div><p id="v13-event-status" role="status"></p><div id="v13-event-list"></div></div>
+                    <div id="admin-catalog-tab" class="admin-tab-content hidden"><h3>Catálogo da loja</h3><div id="v12-catalog-form"></div><p id="v12-admin-status" role="status"></p><div id="v12-admin-catalog" class="v12-grid"></div></div>
+<!-- ---- ABA NPCS ---- -->
+                    <div id="admin-npcs-tab" class="admin-tab-content hidden">
+                        <div id="admin-npc-list" class="admin-list"></div>
+
+                        <h3>Novo NPC</h3>
+                        <input id="admin-npc-name" class="admin-input" placeholder="Nome do NPC" />
+                        <label class="admin-input-label admin-row">
+                            <input type="checkbox" id="admin-npc-isboss" /> É um chefão (boss)
+                        </label>
+
+                        <div class="admin-row admin-stats-row">
+                            <label>❤ Vida <input id="admin-npc-health" class="admin-input admin-input-sm" type="number" value="30" /></label>
+                            <label>⚔ Dano <input id="admin-npc-damage" class="admin-input admin-input-sm" type="number" value="8" /></label>
+                            <label>👟 Vel. <input id="admin-npc-speed" class="admin-input admin-input-sm" type="number" step="0.1" value="0.6" /></label>
+                            <label>📐 Escala <input id="admin-npc-scale" class="admin-input admin-input-sm" type="number" step="0.1" value="1.8" /></label>
+                        </div>
+
+                        <div id="v14-npc-ai-form"></div><div class="v10-image-source"><h4>🖼️ Imagem do NPC / Boss</h4><p class="admin-empty-note">Cole um link direto de imagem (PNG, JPG, WebP ou GIF). Se deixar vazio, será usada a pixel art abaixo.</p><input id="admin-npc-image-url" class="admin-input" type="url" placeholder="https://exemplo.com/meu-boss.png"><label>Ou escolha uma imagem do computador<input id="admin-npc-image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><small>Imagens enviadas serão reduzidas e salvas como PNG estático.</small><div class="v10-image-preview"><img id="admin-npc-image-preview" alt="Preview"><span id="admin-npc-image-status">Nenhuma imagem por URL</span></div></div>
+                        <p class="admin-pixel-label">Ou desenhe o NPC (pixel art):</p>
+                        <div id="pixel-palette"></div>
+                        <div id="pixel-grid"></div>
+                        <button id="pixel-clear" class="btn btn-ghost">🧹 Limpar Desenho</button>
+
+                        <div class="v9-admin-drops"><h4>🎁 Drops deste NPC/Boss</h4><p class="admin-empty-note">Formato: item, chance %, mínimo, máximo. Ex.: cristal_sombrio,25,1,2</p><textarea id="admin-npc-drops" class="admin-input" rows="5" placeholder="pocao_vida,30,1,1&#10;cristal_sombrio,15,1,2&#10;espada_abissal,2,1,1"></textarea></div>
+                    <button id="admin-save-npc" class="btn btn-primary">💾 Salvar NPC</button>
+                    </div>
+
+                    <div id="admin-raids-tab" class="admin-tab-content hidden"><div id="v16-admin"></div></div>
+                    <!-- ---- ABA ITENS ---- -->
+                    <div id="admin-items-tab" class="admin-tab-content hidden">
+                        <div class="v10-admin-title"><div><h3>Catálogo de Itens</h3><p class="admin-empty-note">Crie itens que podem ser usados nos drops de NPCs/Bosses e no inventário.</p></div></div>
+                        <div id="admin-items-list" class="v10-admin-items"></div>
+                        <h3>Novo Item</h3>
+                        <div class="v10-form-grid"><label>ID do item<input id="admin-item-id" class="admin-input" placeholder="espada_dragon"></label><label>Nome<input id="admin-item-name" class="admin-input" placeholder="Espada do Dragão"></label><label>Tipo<select id="admin-item-type" class="admin-input"><option value="consumable">Usável</option><option value="equipment">Equipamento</option><option value="material">Material</option><option value="quest">Missão</option><option value="event">Evento</option><option value="currency">Moeda</option><option value="special">Especial</option></select></label><label>Raridade<select id="admin-item-rarity" class="admin-input"><option value="common">Comum</option><option value="rare">Raro</option><option value="epic">Épico</option><option value="legendary">Lendário</option></select></label></div>
+                        <label>URL do ícone<input id="admin-item-icon" class="admin-input" placeholder="https://.../icone.png"></label>
+                        <label>Descrição<input id="admin-item-desc" class="admin-input" placeholder="Descrição do item"></label>
+                        <button id="admin-save-item" class="btn btn-primary">💾 Salvar Item</button>
+                    </div>
+
+                    <!-- ---- ABA USUÁRIOS ---- -->
+                    <div id="admin-users-tab" class="admin-tab-content hidden">
+                        <p class="admin-empty-note">Gerencie os jogadores cadastrados: conceda moedas ou promova/rebaixe administradores.</p>
+                        <div id="admin-users-list" class="admin-list"></div>
+                        <button id="admin-refresh-users" class="btn btn-secondary">🔄 Atualizar Lista</button>
+                    </div>
+
+                    <button id="admin-back-btn" class="btn btn-secondary">Voltar</button>
+                </div>
+            </div>
+
+            <div id="raids-screen" class="screen hidden"><div class="panel panel-rpg"><h2>Raids globais</h2><p id="v16-raid-status" role="status"></p><div id="v16-raids" class="v12-map-grid"></div><button id="v16-raids-back" class="btn">Voltar</button></div></div>
+            <aside id="v16-combat-status" hidden></aside>
+            <!-- ===== CONTROLES TOUCH (celular/tablet) ===== -->
+            <div id="mobile-controls">
+                <div class="touch-dpad">
+                    <button id="touch-left" class="touch-btn" aria-label="Esquerda">◀</button>
+                    <button id="touch-right" class="touch-btn" aria-label="Direita">▶</button>
+                </div>
+                <div class="touch-actions">
+                    <button id="touch-jump" class="touch-btn touch-btn-round" aria-label="Pular">⤒</button>
+                    <button id="touch-ultimate" class="touch-btn touch-btn-round" aria-label="Ultimate">✦</button><button id="touch-attack" class="touch-btn touch-btn-round touch-btn-attack" aria-label="Atacar">⚔</button>
+                </div>
+            </div>
+
+            <div id="rotate-hint" class="screen hidden">
+                <div class="panel">
+                    <p>📱 ↻</p>
+                    <p>Gire seu aparelho para jogar melhor</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
